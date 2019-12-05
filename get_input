@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source .env
+
+python3 get_input.py $1

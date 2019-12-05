@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd ..
+./get_input 4
