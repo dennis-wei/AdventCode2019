@@ -1,5 +1,7 @@
 import itertools
 
+import time
+
 with open('input.txt', 'r') as f:
     line = f.read().strip()
     problem_input = [int(n) for n in line.split(',')]
@@ -68,8 +70,8 @@ def simulate(input, inst_pointer, base_input, base_idx):
             # print("here4")
             return
         param = input[inst_pointer + 1]
-        print("answer", input[param])
-        print()
+        # print("answer", input[param])
+        # print()
         return input[param]
 
     elif inst_code == 5:
@@ -122,16 +124,16 @@ def simulate(input, inst_pointer, base_input, base_idx):
 def simulate_amplitude(problem_input):
     max_so_far = 0
     for perm in itertools.permutations([0, 1, 2, 3, 4]):
-        print("trying permutation: ", perm)
-        print("AMP 1")
+        # print("trying permutation: ", perm)
+        # print("AMP 1")
         output1 = simulate(problem_input.copy(), 0, [perm[0], 0], 0)
-        print("AMP 2")
+        # print("AMP 2")
         output2 = simulate(problem_input.copy(), 0, [perm[1], output1], 0)
-        print("AMP 3")
+        # print("AMP 3")
         output3 = simulate(problem_input.copy(), 0, [perm[2], output2], 0)
-        print("AMP 4")
+        # print("AMP 4")
         output4 = simulate(problem_input.copy(), 0, [perm[3], output3], 0)
-        print("AMP 5")
+        # print("AMP 5")
         output5 = simulate(problem_input.copy(), 0, [perm[4], output4], 0)
         if output5 > max_so_far:
             max_so_far = output5
@@ -143,4 +145,7 @@ def simulate_amplitude(problem_input):
 # simulate_amplitude([3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0])
 # simulate_amplitude([3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0])
 # simulate_amplitude([3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0])
-# simulate_amplitude(problem_input)
+
+start = time.time()
+simulate_amplitude(problem_input)
+print(f'Part 1 took {time.time() - start} seconds')
