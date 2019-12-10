@@ -3,7 +3,8 @@ import math
 import time
 
 start = time.time()
-input = sys.stdin.read()
+with open('input.txt', 'r') as f:
+    input = f.read()
 print(input)
 print()
 
@@ -62,7 +63,7 @@ for height in range(len(grid)):
             if best == num_in_sight:
                 best_coord = (height, width)
 
-print(f"Solution to Part 1: {best_coord} with {best} visible")
+print(f"Solution to Part 1: {best_coord[::-1]} with {best} visible")
 print(f"Took {time.time() - start} seconds")
 
 def get_dist(c1, c2):
