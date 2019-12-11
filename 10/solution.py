@@ -1,12 +1,15 @@
 import sys
 import math
 import time
+import inflect
 
 start = time.time()
 with open('input.txt', 'r') as f:
     input = f.read()
 print(input)
 print()
+
+p = inflect.engine()
 
 def get_asteroids(grid):
     asteroids = set()
@@ -29,7 +32,7 @@ def get_num_in_sight(grid, asteroids, coord):
             my //= d
         slopes[(x, y)] = (mx, my)
         # print("slope added")
-    
+
     # print(f"slopes for {coord}: {slopes}")
     return(len(set(slopes.values())))
 
@@ -90,14 +93,14 @@ def destroy_visible(grid, asteroids, coord, num_destroyed = 0):
             mx //= d
             my //= d
         inv_slopes[(mx, my)] = min((x, y), inv_slopes.get((mx, my), (math.inf, math.inf)), key = lambda c: get_dist(c, coord))
-    
+
     # print("length of inv_slopes: ", len(inv_slopes))
     visible = sorted(inv_slopes.items(), key=lambda c: get_angle(*c[0]))[::-1]
     # print(list((v[1], get_angle(*v[0])) for v in visible[:10]))
     for v in visible:
         num_destroyed += 1
         if num_destroyed in [1, 2, 3, 10, 20, 50, 100, 199, 200]:
-            print(f"The {num_destroyed}th asteroid is {v[1][::-1]}")
+            print(f"The {p.ordinal(num_destroyed)} asteroid is {v[1][::-1]}")
         if num_destroyed == 200:
             return v[1][::-1]
         asteroids.remove(v[1])
