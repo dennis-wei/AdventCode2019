@@ -18,7 +18,7 @@ class RobotGrid:
         self.grid[(0, 0)] = initial_color
         self.robot_dir = "N"
         self.painted = set()
-    
+
     def rotate_on_output(self, output):
         left_mapping = {
             "N": "W",
@@ -40,7 +40,7 @@ class RobotGrid:
             self.robot_dir = right_mapping[self.robot_dir]
         else:
             raise f"UNKNOWN ROTATION DIRECTION: {output}"
-    
+
     def move(self):
         mapping = {
             "N": (0, 1),
@@ -50,7 +50,7 @@ class RobotGrid:
         }
 
         self.robot_coords = tuple(map(sum, zip(self.robot_coords, mapping[self.robot_dir])))
-    
+
     def paint_on_output(self, output):
         if output == 0:
             self.grid[self.robot_coords] = '.'
@@ -60,23 +60,28 @@ class RobotGrid:
             self.painted.add(self.robot_coords)
         else:
             raise f"UNKNOWN PAINT COLOR: {output}"
-    
+
     def step(self, output):
         # print(f"Robot got results: {output}")
         color_output, turn_output = output
         self.paint_on_output(color_output)
         self.rotate_on_output(turn_output)
         self.move()
-    
+
     def print_grid(self):
         minx = min(c[0] for c in self.grid.keys()) - 1
         maxx = max(c[0] for c in self.grid.keys()) + 1
         miny = min(c[1] for c in self.grid.keys()) - 1
         maxy = max(c[1] for c in self.grid.keys()) + 1
 
-        for y in range(maxy + 1, miny - 1, -1):
-            for x in range(minx - 1, maxx + 1):
-                print(self.grid[(x, y)], end='')
+        mapping = {
+            '.': '█',
+            '#': '░',
+        }
+
+        for y in range(maxy , miny - 1, -1):
+            for x in range(minx - 1, maxx):
+                print(mapping[self.grid[(x, y)]], end='')
             print()
 
 def main():
@@ -89,7 +94,7 @@ def main():
         output = computer.run_on_input([new_input])
         # print(f"Main output: {output}")
         robot_grid.step(output)
-    
+
     print(f"Solution to Part 1: {len(robot_grid.painted)} panels")
     print(f"Took {time.time() - start} seconds")
     print()
