@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 def get_num_digits(n):
     return len(str(n))
 
@@ -6,8 +8,9 @@ def get_padded(n):
 
 class Computer:
     def __init__(self, program):
-        self.program = program
-        self.program.extend(0 for n in range(1000))
+        self.program = defaultdict(int)
+        for i, v in enumerate(program):
+            self.program[i] = v
         self.pc = 0
         self.relative_base = 0
         self.halted = False
@@ -24,7 +27,7 @@ class Computer:
             return self.program[param + self.relative_base]
         else:
             raise f"Unknown mode: {int(mode)}"
-    
+
     def get_output_index(self, mode, param):
         # print("mode: ", mode)
         if int(mode) == 0 or int(mode) == 1:
@@ -51,7 +54,7 @@ class Computer:
 
             self.program[param3] = param_1 + param_2
             self.pc += 4
-        
+
         elif inst_code == 2:
             param_1 = self.get_ra(code[2], self.program[self.pc + 1])
             param_2 = self.get_ra(code[1], self.program[self.pc + 2])
@@ -123,17 +126,17 @@ class Computer:
             else:
                 self.program[param3] = 0
             self.pc += 4
-        
+
         elif inst_code == 9:
             param = self.get_ra(code[2], self.program[self.pc + 1])
             # print("setting relative_base to: ", self.relative_base + param)
             self.relative_base += param
             self.pc += 2
-    
+
     def run_simulation(self):
         while not self.halted and self.status != "AWAITING_INPUT":
             self.simulate()
-    
+
     def run_on_input(self, new_input):
         # print("Got input: ", new_input)
         self.status = "RUNNING"
