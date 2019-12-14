@@ -69,12 +69,12 @@ def get_next_step(recipes, res_map, num_fuel):
             num_can_create = res_map[r]
             # print (f"Resource: {r}, Need: {need}, Can Create: {num_can_create}")
             if need > 0:
-                while need > 0:
-                    t = (num_can_create, r)
-                    # print(f"{recipes[t]} => {num_can_create}{r}")
-                    for resource, amount in recipes[t].items():
-                        new_needed[resource] += amount
-                    need -= num_can_create
+                num_iters = math.ceil(need / num_can_create)
+                t = (num_can_create, r)
+                # print(f"{recipes[t]} => {num_can_create}{r} | {num_iters} times")
+                for resource, amount in recipes[t].items():
+                    new_needed[resource] += num_iters * amount
+                need -= num_iters * num_can_create
                 new_needed[r] += need
             else:
                 new_needed[r] += need
@@ -92,26 +92,28 @@ def part2_driver(recipes, res_map):
     min_fuel = 0
     max_fuel = 1000000000
     while True:
-        print("here")
-        mid = (min + max) // 2
-        num_ore_needed = get_next_step(recipes, res_map, mid)
+        if min_fuel == max_fuel or min_fuel == max_fuel - 1:
+            return min_fuel
+        mid = (min_fuel + max_fuel) // 2
+        num_ore_needed = get_next_step(recipes, res_map, mid).pop("ORE")
+        # print(num_ore_needed)
         if num_ore_needed < 1000000000000:
             min_fuel = mid
         elif num_ore_needed > 1000000000000:
             max_fuel = mid
-        break
 
 def main():
-    recipes = parse_input('s1.txt')
+    start = time.time()
+    recipes = parse_input('input.txt')
     possible_creations = recipes.keys()
     res_map = get_result_map(recipes)
-    a1 = get_next_step(recipes, res_map, 1)
+    a1 = get_next_step(recipes, res_map, 1)["ORE"]
     print(f"Answer to Part 1: {a1}")
+    print(f"Took {time.time() - start} seconds")
 
-    a5 = get_next_step(recipes, res_map, 5)
-    print(f"Answer for 5 fuel: {a5}")
-
-    # a2 = part2_driver(recipes, res_map)
-    # print(f"Answer to Part 2: {a2}")
+    start = time.time()
+    a2 = part2_driver(recipes, res_map)
+    print(f"Answer to Part 2: {a2}")
+    print(f"Took {time.time() - start} seconds")
 
 main()
